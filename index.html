@@ -10,18 +10,30 @@
 html,body{height:100%;overflow:hidden}
 body{background:#1a1510;color:#d4c8b8;font-family:'Inter',sans-serif;font-weight:300;line-height:1.7}
 .deck{position:relative;width:100%;height:100%}
-.card{position:absolute;inset:0;display:flex;flex-direction:row;align-items:stretch;justify-content:flex-start;opacity:0;visibility:hidden;transition:opacity 0.6s ease;overflow-y:auto;background:#1a1510}
+.card{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;opacity:0;visibility:hidden;transition:opacity 0.6s ease;overflow-y:auto;background:#1a1510}
 .card.active{opacity:1;visibility:visible}
 .card-bg{position:fixed;inset:0;background-size:cover;background-position:center;opacity:0;transition:opacity 0.8s ease;z-index:0}
 .card-bg::after{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,rgba(26,21,16,0.78),rgba(26,21,16,0.91))}
 .card.active .card-bg{opacity:1}
-.bg-label{position:fixed;bottom:4rem;right:1.5rem;font-size:0.55rem;color:rgba(255,255,255,0.18);z-index:2;text-align:right;max-width:200px;line-height:1.4;font-style:italic;pointer-events:none}
-/* Timeline rail */
-.tl{width:48px;min-height:100vh;position:relative;z-index:1;flex-shrink:0;display:none}
-.card[data-era] .tl{display:block}
-.tl-line{position:absolute;left:50%;top:0;bottom:0;width:1px;background:linear-gradient(to bottom,transparent 0%,#3d352a 15%,#5a5248 45%,#5a5248 55%,#3d352a 85%,transparent 100%)}
-.tl-marker{position:absolute;left:50%;transform:translateX(-50%);width:8px;height:8px;border-radius:50%;background:#8a7e6e;border:1px solid #b0a090;z-index:2}
-.tl-year{position:absolute;left:50%;transform:translateX(-50%) rotate(-90deg);font-size:0.55rem;color:#6a6050;white-space:nowrap;letter-spacing:0.08em;font-family:'Cormorant Garamond',serif}
+.bg-label{position:fixed;bottom:1.5rem;right:1.5rem;font-size:0.55rem;color:rgba(255,255,255,0.18);z-index:2;text-align:right;max-width:200px;line-height:1.4;font-style:italic;pointer-events:none}
+/* Global fixed timeline nav */
+#timeline{position:fixed;left:0;top:0;bottom:0;width:64px;z-index:200;display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;transition:opacity 0.5s ease;pointer-events:none}
+#timeline.visible{opacity:1;pointer-events:auto}
+.tl-track{position:relative;height:80vh;width:2px}
+.tl-rail{position:absolute;left:50%;transform:translateX(-50%);top:0;bottom:0;width:1px;background:#3d352a}
+.tl-fade-top,.tl-fade-bot{position:absolute;left:0;right:0;height:40px;z-index:1;pointer-events:none}
+.tl-fade-top{top:-40px;background:linear-gradient(to bottom,#1a1510,transparent)}
+.tl-fade-bot{bottom:-40px;background:linear-gradient(to top,#1a1510,transparent)}
+.tl-node{position:absolute;left:50%;transform:translate(-50%,-50%);cursor:pointer;display:flex;align-items:center;z-index:2;transition:all 0.3s}
+.tl-dot{width:7px;height:7px;border-radius:50%;background:#3d352a;border:1px solid #4a4438;transition:all 0.3s;flex-shrink:0}
+.tl-node:hover .tl-dot{background:#8a7e6e;border-color:#b0a090;transform:scale(1.3)}
+.tl-node.active .tl-dot{background:#c8b898;border-color:#e0d5c5;width:9px;height:9px;box-shadow:0 0 6px rgba(200,184,152,0.4)}
+.tl-lbl{position:absolute;left:20px;font-size:0.52rem;color:#5a5248;white-space:nowrap;letter-spacing:0.04em;font-family:'Cormorant Garamond',serif;transition:color 0.3s;opacity:0;pointer-events:none}
+.tl-node:hover .tl-lbl,.tl-node.active .tl-lbl{opacity:1;color:#b0a090}
+.tl-era-lbl{position:absolute;left:50%;transform:translateX(-50%) rotate(-90deg);font-size:0.48rem;color:#3d352a;white-space:nowrap;letter-spacing:0.1em;font-family:'Inter',sans-serif;text-transform:uppercase;transform-origin:center center;pointer-events:none}
+.tl-break{position:absolute;left:50%;transform:translateX(-50%);color:#3d352a;font-size:0.6rem;letter-spacing:0.15em;font-family:'Inter',sans-serif}
+/* Hide per-card timeline elements (replaced by global) */
+.tl{display:none!important}
 .ci{max-width:700px;width:100%;padding:3rem 2rem 6rem;position:relative;z-index:1;margin:0 auto}
 .ct{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:clamp(1.6rem,3.5vw,2.4rem);color:#e8ddd0;text-align:center;margin-bottom:0.3rem;letter-spacing:0.02em}
 .cs{font-family:'Inter',sans-serif;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.15em;color:#6a6050;text-align:center;margin-bottom:2.2rem}
@@ -34,14 +46,6 @@ body{background:#1a1510;color:#d4c8b8;font-family:'Inter',sans-serif;font-weight
 .fn a{color:#5a5248;text-decoration:none;border-bottom:1px dotted #3d352a}
 .fn a:hover{color:#8a7e6e}
 .tn{text-align:center;padding:1.2rem 0 1.8rem;font-family:'Cormorant Garamond',serif;font-size:0.85rem;color:#6a6050;letter-spacing:0.08em;font-style:italic}
-.nav{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:1.2rem;z-index:100;background:rgba(26,21,16,0.85);padding:0.5rem 1rem;border-radius:2rem;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
-.nb{background:none;border:1px solid #3d352a;color:#8a7e6e;width:38px;height:38px;border-radius:50%;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;transition:all 0.3s}
-.nb:hover{border-color:#8a7e6e;color:#d4c8b8}
-.nb:disabled{opacity:0.15;cursor:default;border-color:#2e2820}
-.dots{display:flex;gap:0.35rem;align-items:center}
-.dot{width:5px;height:5px;border-radius:50%;background:#3d352a;transition:all 0.3s;cursor:pointer}
-.dot.on{background:#8a7e6e;transform:scale(1.4)}
-.dot:hover{background:#6a6050}
 .ctr{font-size:0.65rem;color:#5a5040;letter-spacing:0.05em;position:fixed;top:1.2rem;right:1.5rem;z-index:100}
 .hero{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:80vh;text-align:center;padding:0 2rem}
 .hq{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:clamp(1.7rem,4vw,2.8rem);color:#e8ddd0;letter-spacing:0.02em;line-height:1.4;white-space:nowrap}
@@ -55,7 +59,7 @@ body{background:#1a1510;color:#d4c8b8;font-family:'Inter',sans-serif;font-weight
 .langs{display:flex;gap:0.7rem;flex-wrap:wrap;justify-content:center;margin-top:1.5rem}
 .langs a{font-size:0.65rem;color:#6a6050;text-decoration:none;padding:0.25rem 0.5rem;border:1px solid #2e2820;border-radius:1rem;transition:all 0.3s}
 .langs a:hover{border-color:#6a6050;color:#b0a090}
-@media(max-width:600px){.tl{width:32px}.hq{white-space:normal;max-width:95vw}}
+@media(max-width:600px){#timeline{width:40px}.tl-lbl{display:none}.hq{white-space:normal;max-width:95vw}}
 </style>
 </head>
 <body>
@@ -431,26 +435,74 @@ body{background:#1a1510;color:#d4c8b8;font-family:'Inter',sans-serif;font-weight
 
 </div><!-- end .deck -->
 
-<div class="nav">
-  <button class="nb" id="pb" onclick="prev()" disabled>←</button>
-  <div class="dots" id="dots"></div>
-  <button class="nb" id="nb" onclick="next()">→</button>
+<!-- Global timeline navigation -->
+<div id="timeline">
+  <div class="tl-track">
+    <div class="tl-rail"></div>
+    <div class="tl-fade-top"></div>
+    <div class="tl-fade-bot"></div>
+    <!-- Broad history: 121 AD → 34 AD (top 45%) -->
+    <div class="tl-era-lbl" style="top:16%;left:calc(50% + 18px)">Roman&nbsp;era</div>
+    <div class="tl-node" data-card="1" style="top:5%"><div class="tl-dot"></div><div class="tl-lbl">c. 121 AD · Suetonius</div></div>
+    <div class="tl-node" data-card="1" style="top:10%"><div class="tl-dot"></div><div class="tl-lbl">c. 116 AD · Tacitus</div></div>
+    <div class="tl-node" data-card="1" style="top:15%"><div class="tl-dot"></div><div class="tl-lbl">c. 111 AD · Pliny</div></div>
+    <div class="tl-node" data-card="1" style="top:21%"><div class="tl-dot"></div><div class="tl-lbl">c. 93 AD · Josephus</div></div>
+    <div class="tl-node" data-card="2" style="top:30%"><div class="tl-dot"></div><div class="tl-lbl">c. 60 AD · Paul's trials</div></div>
+    <div class="tl-node" data-card="2" style="top:34%"><div class="tl-dot"></div><div class="tl-lbl">c. 49 AD · Expelled from Rome</div></div>
+    <div class="tl-node" data-card="3" style="top:40%"><div class="tl-dot"></div><div class="tl-lbl">c. 34 AD · Saul's conversion</div></div>
+    <div class="tl-node" data-card="4" style="top:44%"><div class="tl-dot"></div><div class="tl-lbl">c. 33 AD · Stephen stoned</div></div>
+    <!-- Break / zoom indicator -->
+    <div class="tl-break" style="top:49%">⋮</div>
+    <div class="tl-era-lbl" style="top:69%;left:calc(50% + 18px)">Passion&nbsp;week</div>
+    <!-- Passion period: c. 30 AD detail (bottom 45%) -->
+    <div class="tl-node" data-card="5" style="top:54%"><div class="tl-dot"></div><div class="tl-lbl">c. 31 AD · Signs in the Temple</div></div>
+    <div class="tl-node" data-card="6" style="top:60%"><div class="tl-dot"></div><div class="tl-lbl">c. 30 AD · Weeks before Passover</div></div>
+    <div class="tl-node" data-card="7" style="top:67%"><div class="tl-dot"></div><div class="tl-lbl">Days before · The Plot</div></div>
+    <div class="tl-node" data-card="8" style="top:75%"><div class="tl-dot"></div><div class="tl-lbl">Friday · The Cross</div></div>
+    <div class="tl-node" data-card="9" style="top:81%"><div class="tl-dot"></div><div class="tl-lbl">Friday morning · Before Pilate</div></div>
+    <div class="tl-node" data-card="10" style="top:88%"><div class="tl-dot"></div><div class="tl-lbl">Thursday night · Sanhedrin</div></div>
+    <div class="tl-node" data-card="11" style="top:95%"><div class="tl-dot"></div><div class="tl-lbl">Thursday evening · Last Supper</div></div>
+  </div>
 </div>
 <div class="ctr" id="ctr"></div>
 
 <script>
 const C=document.querySelectorAll('.card'),T=C.length;let cur=0;
-const D=document.getElementById('dots');
-for(let i=0;i<T;i++){const d=document.createElement('div');d.className='dot'+(i===0?' on':'');d.onclick=()=>go(i);D.appendChild(d)}
-function go(n){if(n<0||n>=T)return;C[cur].classList.remove('active');cur=n;C[cur].classList.add('active');C[cur].scrollTop=0;upd()}
-function next(){go(cur+1)}function prev(){go(cur-1)}
-function upd(){
-  document.getElementById('pb').disabled=cur===0;
-  document.getElementById('nb').disabled=cur===T-1;
-  document.getElementById('ctr').textContent=(cur+1)+' / '+T;
-  document.querySelectorAll('.dot').forEach((d,i)=>d.classList.toggle('on',i===cur));
+const TL=document.getElementById('timeline');
+const nodes=document.querySelectorAll('.tl-node');
+
+// Click timeline nodes to navigate
+nodes.forEach(n=>{
+  n.addEventListener('click',()=>{
+    const card=parseInt(n.dataset.card);
+    if(!isNaN(card))go(card);
+  });
+});
+
+function go(n){
+  if(n<0||n>=T)return;
+  C[cur].classList.remove('active');
+  cur=n;
+  C[cur].classList.add('active');
+  C[cur].scrollTop=0;
+  upd();
 }
-document.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();next()}if(e.key==='ArrowLeft'){e.preventDefault();prev()}});
+function next(){go(cur+1)}
+function prev(){go(cur-1)}
+function upd(){
+  document.getElementById('ctr').textContent=(cur+1)+' / '+T;
+  // Show timeline only on content cards (1–11)
+  TL.classList.toggle('visible',cur>=1&&cur<=11);
+  // Highlight active nodes
+  nodes.forEach(n=>{
+    const card=parseInt(n.dataset.card);
+    n.classList.toggle('active',card===cur);
+  });
+}
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'||e.key===' '||e.key==='ArrowDown'){e.preventDefault();next()}
+  if(e.key==='ArrowLeft'||e.key==='ArrowUp'){e.preventDefault();prev()}
+});
 let tx=0;
 document.addEventListener('touchstart',e=>{tx=e.changedTouches[0].screenX});
 document.addEventListener('touchend',e=>{const d=tx-e.changedTouches[0].screenX;if(Math.abs(d)>50){d>0?next():prev()}});
