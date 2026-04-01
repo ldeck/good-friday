@@ -16,22 +16,28 @@ body{background:#1a1510;color:#d4c8b8;font-family:'Inter',sans-serif;font-weight
 .card-bg::after{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,rgba(26,21,16,0.78),rgba(26,21,16,0.91))}
 .card.active .card-bg{opacity:1}
 .bg-label{position:fixed;bottom:1.5rem;right:1.5rem;font-size:0.55rem;color:rgba(255,255,255,0.18);z-index:2;text-align:right;max-width:200px;line-height:1.4;font-style:italic;pointer-events:none}
-/* Global fixed timeline nav */
-#timeline{position:fixed;left:0;top:0;bottom:0;width:64px;z-index:200;display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;transition:opacity 0.5s ease;pointer-events:none}
+/* Global fixed sundial timeline nav */
+#timeline{position:fixed;left:0;top:0;bottom:0;width:120px;z-index:200;display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;transition:opacity 0.5s ease;pointer-events:none}
 #timeline.visible{opacity:1;pointer-events:auto}
-.tl-track{position:relative;height:80vh;width:2px}
-.tl-rail{position:absolute;left:50%;transform:translateX(-50%);top:0;bottom:0;width:1px;background:#3d352a}
-.tl-fade-top,.tl-fade-bot{position:absolute;left:0;right:0;height:40px;z-index:1;pointer-events:none}
-.tl-fade-top{top:-40px;background:linear-gradient(to bottom,#1a1510,transparent)}
-.tl-fade-bot{bottom:-40px;background:linear-gradient(to top,#1a1510,transparent)}
-.tl-node{position:absolute;left:50%;transform:translate(-50%,-50%);cursor:pointer;display:flex;align-items:center;z-index:2;transition:all 0.3s}
-.tl-dot{width:7px;height:7px;border-radius:50%;background:#3d352a;border:1px solid #4a4438;transition:all 0.3s;flex-shrink:0}
-.tl-node:hover .tl-dot{background:#8a7e6e;border-color:#b0a090;transform:scale(1.3)}
-.tl-node.active .tl-dot{background:#c8b898;border-color:#e0d5c5;width:9px;height:9px;box-shadow:0 0 6px rgba(200,184,152,0.4)}
-.tl-lbl{position:absolute;left:20px;font-size:0.52rem;color:#5a5248;white-space:nowrap;letter-spacing:0.04em;font-family:'Cormorant Garamond',serif;transition:color 0.3s;opacity:0;pointer-events:none}
-.tl-node:hover .tl-lbl,.tl-node.active .tl-lbl{opacity:1;color:#b0a090}
-.tl-era-lbl{position:absolute;left:50%;transform:translateX(-50%) rotate(-90deg);font-size:0.48rem;color:#3d352a;white-space:nowrap;letter-spacing:0.1em;font-family:'Inter',sans-serif;text-transform:uppercase;transform-origin:center center;pointer-events:none}
-.tl-break{position:absolute;left:50%;transform:translateX(-50%);color:#3d352a;font-size:0.6rem;letter-spacing:0.15em;font-family:'Inter',sans-serif}
+.tl-track{position:relative;height:82vh;width:100%}
+.tl-rail{position:absolute;left:28px;top:0;bottom:0;width:2px;background:linear-gradient(to bottom,transparent 0%,#4a3f2e 8%,#6a5d45 48%,#6a5d45 52%,#4a3f2e 92%,transparent 100%)}
+.tl-fade-top,.tl-fade-bot{position:absolute;left:0;right:0;height:50px;z-index:1;pointer-events:none}
+.tl-fade-top{top:-50px;background:linear-gradient(to bottom,#1a1510,transparent)}
+.tl-fade-bot{bottom:-50px;background:linear-gradient(to top,#1a1510,transparent)}
+/* Sundial tick marks */
+.tl-node{position:absolute;left:14px;transform:translateY(-50%);cursor:pointer;display:flex;align-items:center;gap:6px;z-index:2;transition:all 0.3s;padding:3px 0}
+.tl-tick{width:14px;height:2px;background:#4a3f2e;border-radius:1px;transition:all 0.3s;flex-shrink:0;position:relative}
+.tl-tick::after{content:'';position:absolute;right:-5px;top:-2px;width:6px;height:6px;border-radius:50%;background:#4a3f2e;border:1px solid #5a4d38;transition:all 0.3s}
+.tl-node:hover .tl-tick{width:20px;background:#8a7e6e}
+.tl-node:hover .tl-tick::after{background:#8a7e6e;border-color:#b0a090}
+.tl-node.active .tl-tick{width:24px;height:3px;background:#c8b898}
+.tl-node.active .tl-tick::after{background:#c8b898;border-color:#e0d5c5;width:8px;height:8px;top:-2.5px;box-shadow:0 0 10px rgba(200,184,152,0.5),0 0 20px rgba(200,184,152,0.2)}
+.tl-lbl{font-size:0.58rem;color:#5a5248;white-space:nowrap;letter-spacing:0.03em;font-family:'Cormorant Garamond',serif;transition:all 0.3s;margin-left:8px}
+.tl-node:hover .tl-lbl{color:#b0a090}
+.tl-node.active .tl-lbl{color:#c8b898;font-size:0.62rem}
+.tl-era{position:absolute;left:6px;font-size:0.44rem;color:#3d352a;white-space:nowrap;letter-spacing:0.12em;font-family:'Inter',sans-serif;text-transform:uppercase;pointer-events:none;transform:translateY(-50%)}
+.tl-break{position:absolute;left:25px;transform:translateY(-50%);color:#4a3f2e;font-size:0.7rem;letter-spacing:0.1em;font-family:'Cormorant Garamond',serif}
+.tl-rewind{position:absolute;bottom:-30px;left:50%;transform:translateX(-50%);font-size:0.5rem;color:#4a3f2e;white-space:nowrap;font-family:'Cormorant Garamond',serif;font-style:italic;letter-spacing:0.06em}
 /* Hide per-card timeline elements (replaced by global) */
 .tl{display:none!important}
 .ci{max-width:700px;width:100%;padding:3rem 2rem 6rem;position:relative;z-index:1;margin:0 auto}
@@ -59,7 +65,7 @@ body{background:#1a1510;color:#d4c8b8;font-family:'Inter',sans-serif;font-weight
 .langs{display:flex;gap:0.7rem;flex-wrap:wrap;justify-content:center;margin-top:1.5rem}
 .langs a{font-size:0.65rem;color:#6a6050;text-decoration:none;padding:0.25rem 0.5rem;border:1px solid #2e2820;border-radius:1rem;transition:all 0.3s}
 .langs a:hover{border-color:#6a6050;color:#b0a090}
-@media(max-width:600px){#timeline{width:40px}.tl-lbl{display:none}.hq{white-space:normal;max-width:95vw}}
+@media(max-width:700px){#timeline{width:56px}.tl-lbl{display:none}.tl-tick{width:10px}.tl-era{display:none}.hq{white-space:normal;max-width:95vw}}
 </style>
 </head>
 <body>
@@ -216,75 +222,8 @@ body{background:#1a1510;color:#d4c8b8;font-family:'Inter',sans-serif;font-weight
   </div>
 </div>
 
-<!-- CARD 6: The Coming Kingdom — reversed, with time transition -->
-<div class="card" data-card="6" data-era="c. 30 AD" data-pos="45">
-  <div class="card-bg" style="background-image:url('https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Brooklyn_Museum_-_The_Procession_in_the_Streets_of_Jerusalem_%28Le_cort%C3%A8ge_dans_les_rues_de_J%C3%A9rusalem%29_-_James_Tissot.jpg/1024px-Brooklyn_Museum_-_The_Procession_in_the_Streets_of_Jerusalem_%28Le_cort%C3%A8ge_dans_les_rues_de_J%C3%A9rusalem%29_-_James_Tissot.jpg')"></div>
-  <div class="bg-label">James Tissot — <em>The Procession in the Streets of Jerusalem</em> (c. 1890)</div>
-  <div class="tl"><div class="tl-line"></div><div class="tl-marker" style="top:50%"></div><div class="tl-year" style="top:50%">c. 30 AD</div></div>
-  <div class="ci">
-    <div class="ct">The Coming Kingdom</div>
-    <div class="cs">Galilee to Jerusalem · weeks before Passover · c. 30 AD</div>
-    <div class="tn">— winding back before the event —</div>
-    <div class="qb">
-      <div class="q">"Some of the Pharisees in the crowd said to him, 'Teacher, rebuke your disciples.' He answered, 'I tell you, if they keep silent, the very stones will cry out!'"</div>
-      <div class="a">— Pharisees and Jesus (<a href="https://netbible.org/#!l/bible%3ALuke%2019%3A39-net_strongs2__notes%3ALuke%2019" target="_blank">Luke 19:39–40</a>)</div>
-    </div>
-    <div class="qb">
-      <div class="q">"As he approached, the whole crowd of his disciples began to rejoice and praise God with a loud voice for all the mighty works they had seen: 'Blessed is the king who comes in the name of the Lord! Peace in heaven and glory in the highest!'"</div>
-      <div class="a">— The crowds, entering Jerusalem (<a href="https://netbible.org/#!l/bible%3ALuke%2019%3A37-net_strongs2__notes%3ALuke%2019" target="_blank">Luke 19:37–38</a>)</div>
-    </div>
-    <div class="qb">
-      <div class="q">"They sent their disciples to him, along with the Herodians, saying, 'Teacher, we know that you are truthful… Is it right to pay taxes to Caesar or not?' … He said to them, 'Then give to Caesar the things that are Caesar's, and to God the things that are God's.' When they heard this they were stunned, and they left him and went away."</div>
-      <div class="a">— Pharisees, Herodians, and Jesus (<a href="https://netbible.org/#!l/bible%3AMatthew%2022%3A15-net_strongs2__notes%3AMatthew%2022" target="_blank">Matt 22:15–22</a>)</div>
-    </div>
-    <div class="qb">
-      <div class="q">"The Son of Man did not come to be served but to serve, and to give his life as a ransom for many."</div>
-      <div class="a">— Jesus, on the road to Jerusalem (<a href="https://netbible.org/#!l/bible%3AMark%2010%3A45-net_strongs2__notes%3AMark%2010" target="_blank">Mark 10:45</a>)</div>
-    </div>
-    <div class="qb">
-      <div class="q">"At that time some Pharisees came to him and said, 'Get away from here because Herod wants to kill you.' But he said to them, 'Go and tell that fox, "Look, I am casting out demons and performing healings today and tomorrow, and on the third day I will complete my work." Nevertheless I must go on my way today and tomorrow and the next day, because it is impossible that a prophet should be killed outside Jerusalem.'"</div>
-      <div class="a">— Jesus, responding to Herod's threats (<a href="https://netbible.org/#!l/bible%3ALuke%2013%3A31-net_strongs2__notes%3ALuke%2013" target="_blank">Luke 13:31–33</a>)</div>
-    </div>
-  </div>
-</div>
-
-<!-- CARD 7: The Plot — reversed -->
-<div class="card" data-card="7" data-era="c. 30 AD" data-pos="43">
-  <div class="card-bg" style="background-image:url('https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/Giotto_-_Scrovegni_-_-31-_-_Kiss_of_Judas.jpg/1024px-Giotto_-_Scrovegni_-_-31-_-_Kiss_of_Judas.jpg')"></div>
-  <div class="bg-label">Giotto — <em>Kiss of Judas</em> (c. 1305), Scrovegni Chapel</div>
-  <div class="tl"><div class="tl-line"></div><div class="tl-marker" style="top:50%"></div><div class="tl-year" style="top:50%">c. 30 AD</div></div>
-  <div class="ci">
-    <div class="ct">The Plot</div>
-    <div class="cs">Jerusalem · days before Passover</div>
-    <div class="qb">
-      <div class="q">"'Not during the feast,' they said, 'so there won't be a riot among the people.'"</div>
-      <div class="a">— The chief priests and experts in the law (<a href="https://netbible.org/#!l/bible%3AMark%2014%3A2-net_strongs2__notes%3AMark%2014" target="_blank">Mark 14:2</a>)</div>
-    </div>
-    <div class="qb">
-      <div class="q">"Then one of the twelve, the one named Judas Iscariot, went to the chief priests and said, 'What will you give me to betray him into your hands?' So they set out thirty silver coins for him. From that time on, Judas began looking for an opportunity to betray him."</div>
-      <div class="a">— Judas Iscariot (<a href="https://netbible.org/#!l/bible%3AMatthew%2026%3A14-net_strongs2__notes%3AMatthew%2026" target="_blank">Matt 26:14–16</a>)</div>
-    </div>
-    <div class="qb">
-      <div class="q">"So from that day they planned together to kill him."</div>
-      <div class="a">— <a href="https://netbible.org/#!l/bible%3AJohn%2011%3A53-net_strongs2__notes%3AJohn%2011" target="_blank">John 11:53</a></div>
-    </div>
-    <div class="qb">
-      <div class="q">"Then one of them, Caiaphas, who was high priest that year, said, 'You know nothing at all! You do not realise that it is better for you to have one man die for the people than for the whole nation to perish.'"</div>
-      <div class="a">— Caiaphas, high priest (<a href="https://netbible.org/#!l/bible%3AJohn%2011%3A49-net_strongs2__notes%3AJohn%2011" target="_blank">John 11:49–50</a>)</div>
-    </div>
-    <div class="qb">
-      <div class="q">"Then the chief priests and the Pharisees called the council together and said, 'What are we doing? For this man is performing many miraculous signs. If we let him go on in this way, everyone will believe in him, and the Romans will come and take away our sanctuary and our nation.'"</div>
-      <div class="a">— The Sanhedrin (<a href="https://netbible.org/#!l/bible%3AJohn%2011%3A47-net_strongs2__notes%3AJohn%2011" target="_blank">John 11:47–48</a>)</div>
-    </div>
-    <div class="qb">
-      <div class="q">"So the Pharisees went out and planned with the Herodians how they could trap him and kill him."</div>
-      <div class="a">— <a href="https://netbible.org/#!l/bible%3AMark%203%3A6-net_strongs2__notes%3AMark%203" target="_blank">Mark 3:6</a></div>
-    </div>
-  </div>
-</div>
-
-<!-- CARD 8: The Cross -->
-<div class="card" data-card="8" data-era="c. 30 AD" data-pos="40">
+<!-- CARD 6: The Cross — the event itself -->
+<div class="card" data-card="6" data-era="c. 30 AD" data-pos="40">
   <div class="card-bg" style="background-image:url('https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Albrecht_Altdorfer_-_Christ_on_the_Cross_-_WGA00214.jpg/800px-Albrecht_Altdorfer_-_Christ_on_the_Cross_-_WGA00214.jpg')"></div>
   <div class="bg-label">Albrecht Altdorfer — <em>Christ on the Cross</em> (c. 1526)</div>
   <div class="tl"><div class="tl-line"></div><div class="tl-marker" style="top:50%"></div><div class="tl-year" style="top:50%">Friday</div></div>
@@ -318,8 +257,8 @@ body{background:#1a1510;color:#d4c8b8;font-family:'Inter',sans-serif;font-weight
   </div>
 </div>
 
-<!-- CARD 9: Before Pilate — reversed -->
-<div class="card" data-card="9" data-era="c. 30 AD" data-pos="38">
+<!-- CARD 7: Before Pilate — reversed -->
+<div class="card" data-card="7" data-era="c. 30 AD" data-pos="38">
   <div class="card-bg" style="background-image:url('https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/Ecce_homo_by_Antonio_Ciseri_%281%29.jpg/1024px-Ecce_homo_by_Antonio_Ciseri_%281%29.jpg')"></div>
   <div class="bg-label">Antonio Ciseri — <em>Ecce Homo</em> (1871)</div>
   <div class="tl"><div class="tl-line"></div><div class="tl-marker" style="top:50%"></div><div class="tl-year" style="top:50%">Friday AM</div></div>
@@ -354,14 +293,15 @@ body{background:#1a1510;color:#d4c8b8;font-family:'Inter',sans-serif;font-weight
   </div>
 </div>
 
-<!-- CARD 10: Before the Sanhedrin — reversed -->
-<div class="card" data-card="10" data-era="c. 30 AD" data-pos="36">
+<!-- CARD 8: Before the Sanhedrin — reversed -->
+<div class="card" data-card="8" data-era="c. 30 AD" data-pos="36">
   <div class="card-bg" style="background-image:url('https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/Gerard_van_Honthorst_-_Christ_before_the_High_Priest_-_WGA11650.jpg/1024px-Gerard_van_Honthorst_-_Christ_before_the_High_Priest_-_WGA11650.jpg')"></div>
   <div class="bg-label">Gerard van Honthorst — <em>Christ before the High Priest</em> (c. 1617)</div>
   <div class="tl"><div class="tl-line"></div><div class="tl-marker" style="top:50%"></div><div class="tl-year" style="top:50%">Thu night</div></div>
   <div class="ci">
     <div class="ct">Before the Sanhedrin</div>
     <div class="cs">House of the High Priest · Thursday night</div>
+    <div class="tn">— winding back: the night before —</div>
     <div class="qb">
       <div class="q">"Then they spat in his face and struck him with their fists. And some slapped him, saying, 'Prophesy for us, you Christ! Who hit you?'"</div>
       <div class="a">— <a href="https://netbible.org/#!l/bible%3AMatthew%2026%3A67-net_strongs2__notes%3AMatthew%2026" target="_blank">Matt 26:67–68</a></div>
@@ -381,15 +321,15 @@ body{background:#1a1510;color:#d4c8b8;font-family:'Inter',sans-serif;font-weight
   </div>
 </div>
 
-<!-- CARD 11: The Last Supper — innermost layer, reversed -->
-<div class="card" data-card="11" data-era="c. 30 AD" data-pos="34">
+<!-- CARD 9: The Last Supper — innermost layer, reversed -->
+<div class="card" data-card="9" data-era="c. 30 AD" data-pos="34">
   <div class="card-bg" style="background-image:url('https://upload.wikimedia.org/wikipedia/commons/thumb/4/48/The_Last_Supper_-_Leonardo_Da_Vinci_-_High_Resolution_32x16.jpg/1280px-The_Last_Supper_-_Leonardo_Da_Vinci_-_High_Resolution_32x16.jpg')"></div>
   <div class="bg-label">Leonardo da Vinci — <em>The Last Supper</em> (c. 1495–1498)</div>
   <div class="tl"><div class="tl-line"></div><div class="tl-marker" style="top:50%"></div><div class="tl-year" style="top:50%">Thu eve</div></div>
   <div class="ci">
     <div class="ct">The Last Supper</div>
     <div class="cs">Upper Room, Jerusalem · Thursday evening</div>
-    <div class="tn">— the innermost layer —</div>
+    <div class="tn">— winding back: the last evening together —</div>
     <div class="qb">
       <div class="q">"'You will all fall away,' Jesus told them… Peter said to him, 'Even if they all fall away, I will not!' Jesus said, 'I tell you the truth, today — this very night — before a rooster crows twice, you will deny me three times.' But Peter insisted emphatically, 'Even if I must die with you, I will never deny you.' And all of them said the same thing."</div>
       <div class="a">— Jesus and Peter (<a href="https://netbible.org/#!l/bible%3AMark%2014%3A27-net_strongs2__notes%3AMark%2014" target="_blank">Mark 14:27–31</a>)</div>
@@ -405,6 +345,74 @@ body{background:#1a1510;color:#d4c8b8;font-family:'Inter',sans-serif;font-weight
     <div class="qb">
       <div class="q">"I have earnestly desired to eat this Passover with you before I suffer. For I tell you, I will not eat it again until it is fulfilled in the kingdom of God."</div>
       <div class="a">— Jesus (<a href="https://netbible.org/#!l/bible%3ALuke%2022%3A15-net_strongs2__notes%3ALuke%2022" target="_blank">Luke 22:15–16</a>)</div>
+    </div>
+  </div>
+</div>
+
+<!-- CARD 10: The Plot — reversed -->
+<div class="card" data-card="10" data-era="c. 30 AD" data-pos="43">
+  <div class="card-bg" style="background-image:url('https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/Giotto_-_Scrovegni_-_-31-_-_Kiss_of_Judas.jpg/1024px-Giotto_-_Scrovegni_-_-31-_-_Kiss_of_Judas.jpg')"></div>
+  <div class="bg-label">Giotto — <em>Kiss of Judas</em> (c. 1305), Scrovegni Chapel</div>
+  <div class="tl"><div class="tl-line"></div><div class="tl-marker" style="top:50%"></div><div class="tl-year" style="top:50%">c. 30 AD</div></div>
+  <div class="ci">
+    <div class="ct">The Plot</div>
+    <div class="cs">Jerusalem · days before Passover</div>
+    <div class="tn">— winding back: the conspiracy —</div>
+    <div class="qb">
+      <div class="q">"'Not during the feast,' they said, 'so there won't be a riot among the people.'"</div>
+      <div class="a">— The chief priests and experts in the law (<a href="https://netbible.org/#!l/bible%3AMark%2014%3A2-net_strongs2__notes%3AMark%2014" target="_blank">Mark 14:2</a>)</div>
+    </div>
+    <div class="qb">
+      <div class="q">"Then one of the twelve, the one named Judas Iscariot, went to the chief priests and said, 'What will you give me to betray him into your hands?' So they set out thirty silver coins for him. From that time on, Judas began looking for an opportunity to betray him."</div>
+      <div class="a">— Judas Iscariot (<a href="https://netbible.org/#!l/bible%3AMatthew%2026%3A14-net_strongs2__notes%3AMatthew%2026" target="_blank">Matt 26:14–16</a>)</div>
+    </div>
+    <div class="qb">
+      <div class="q">"So from that day they planned together to kill him."</div>
+      <div class="a">— <a href="https://netbible.org/#!l/bible%3AJohn%2011%3A53-net_strongs2__notes%3AJohn%2011" target="_blank">John 11:53</a></div>
+    </div>
+    <div class="qb">
+      <div class="q">"Then one of them, Caiaphas, who was high priest that year, said, 'You know nothing at all! You do not realise that it is better for you to have one man die for the people than for the whole nation to perish.'"</div>
+      <div class="a">— Caiaphas, high priest (<a href="https://netbible.org/#!l/bible%3AJohn%2011%3A49-net_strongs2__notes%3AJohn%2011" target="_blank">John 11:49–50</a>)</div>
+    </div>
+    <div class="qb">
+      <div class="q">"Then the chief priests and the Pharisees called the council together and said, 'What are we doing? For this man is performing many miraculous signs. If we let him go on in this way, everyone will believe in him, and the Romans will come and take away our sanctuary and our nation.'"</div>
+      <div class="a">— The Sanhedrin (<a href="https://netbible.org/#!l/bible%3AJohn%2011%3A47-net_strongs2__notes%3AJohn%2011" target="_blank">John 11:47–48</a>)</div>
+    </div>
+    <div class="qb">
+      <div class="q">"So the Pharisees went out and planned with the Herodians how they could trap him and kill him."</div>
+      <div class="a">— <a href="https://netbible.org/#!l/bible%3AMark%203%3A6-net_strongs2__notes%3AMark%203" target="_blank">Mark 3:6</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- CARD 11: The Coming Kingdom — reversed, with time transition -->
+<div class="card" data-card="11" data-era="c. 30 AD" data-pos="45">
+  <div class="card-bg" style="background-image:url('https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Brooklyn_Museum_-_The_Procession_in_the_Streets_of_Jerusalem_%28Le_cort%C3%A8ge_dans_les_rues_de_J%C3%A9rusalem%29_-_James_Tissot.jpg/1024px-Brooklyn_Museum_-_The_Procession_in_the_Streets_of_Jerusalem_%28Le_cort%C3%A8ge_dans_les_rues_de_J%C3%A9rusalem%29_-_James_Tissot.jpg')"></div>
+  <div class="bg-label">James Tissot — <em>The Procession in the Streets of Jerusalem</em> (c. 1890)</div>
+  <div class="tl"><div class="tl-line"></div><div class="tl-marker" style="top:50%"></div><div class="tl-year" style="top:50%">c. 30 AD</div></div>
+  <div class="ci">
+    <div class="ct">The Coming Kingdom</div>
+    <div class="cs">Galilee to Jerusalem · weeks before Passover · c. 30 AD</div>
+    <div class="tn">— winding back: the weeks before —</div>
+    <div class="qb">
+      <div class="q">"Some of the Pharisees in the crowd said to him, 'Teacher, rebuke your disciples.' He answered, 'I tell you, if they keep silent, the very stones will cry out!'"</div>
+      <div class="a">— Pharisees and Jesus (<a href="https://netbible.org/#!l/bible%3ALuke%2019%3A39-net_strongs2__notes%3ALuke%2019" target="_blank">Luke 19:39–40</a>)</div>
+    </div>
+    <div class="qb">
+      <div class="q">"As he approached, the whole crowd of his disciples began to rejoice and praise God with a loud voice for all the mighty works they had seen: 'Blessed is the king who comes in the name of the Lord! Peace in heaven and glory in the highest!'"</div>
+      <div class="a">— The crowds, entering Jerusalem (<a href="https://netbible.org/#!l/bible%3ALuke%2019%3A37-net_strongs2__notes%3ALuke%2019" target="_blank">Luke 19:37–38</a>)</div>
+    </div>
+    <div class="qb">
+      <div class="q">"They sent their disciples to him, along with the Herodians, saying, 'Teacher, we know that you are truthful… Is it right to pay taxes to Caesar or not?' … He said to them, 'Then give to Caesar the things that are Caesar's, and to God the things that are God's.' When they heard this they were stunned, and they left him and went away."</div>
+      <div class="a">— Pharisees, Herodians, and Jesus (<a href="https://netbible.org/#!l/bible%3AMatthew%2022%3A15-net_strongs2__notes%3AMatthew%2022" target="_blank">Matt 22:15–22</a>)</div>
+    </div>
+    <div class="qb">
+      <div class="q">"The Son of Man did not come to be served but to serve, and to give his life as a ransom for many."</div>
+      <div class="a">— Jesus, on the road to Jerusalem (<a href="https://netbible.org/#!l/bible%3AMark%2010%3A45-net_strongs2__notes%3AMark%2010" target="_blank">Mark 10:45</a>)</div>
+    </div>
+    <div class="qb">
+      <div class="q">"At that time some Pharisees came to him and said, 'Get away from here because Herod wants to kill you.' But he said to them, 'Go and tell that fox, "Look, I am casting out demons and performing healings today and tomorrow, and on the third day I will complete my work." Nevertheless I must go on my way today and tomorrow and the next day, because it is impossible that a prophet should be killed outside Jerusalem.'"</div>
+      <div class="a">— Jesus, responding to Herod's threats (<a href="https://netbible.org/#!l/bible%3ALuke%2013%3A31-net_strongs2__notes%3ALuke%2013" target="_blank">Luke 13:31–33</a>)</div>
     </div>
   </div>
 </div>
@@ -435,33 +443,34 @@ body{background:#1a1510;color:#d4c8b8;font-family:'Inter',sans-serif;font-weight
 
 </div><!-- end .deck -->
 
-<!-- Global timeline navigation -->
+<!-- Global sundial timeline navigation — "winding back the clock" -->
 <div id="timeline">
   <div class="tl-track">
     <div class="tl-rail"></div>
     <div class="tl-fade-top"></div>
     <div class="tl-fade-bot"></div>
-    <!-- Broad history: 121 AD → 34 AD (top 45%) -->
-    <div class="tl-era-lbl" style="top:16%;left:calc(50% + 18px)">Roman&nbsp;era</div>
-    <div class="tl-node" data-card="1" style="top:5%"><div class="tl-dot"></div><div class="tl-lbl">c. 121 AD · Suetonius</div></div>
-    <div class="tl-node" data-card="1" style="top:10%"><div class="tl-dot"></div><div class="tl-lbl">c. 116 AD · Tacitus</div></div>
-    <div class="tl-node" data-card="1" style="top:15%"><div class="tl-dot"></div><div class="tl-lbl">c. 111 AD · Pliny</div></div>
-    <div class="tl-node" data-card="1" style="top:21%"><div class="tl-dot"></div><div class="tl-lbl">c. 93 AD · Josephus</div></div>
-    <div class="tl-node" data-card="2" style="top:30%"><div class="tl-dot"></div><div class="tl-lbl">c. 60 AD · Paul's trials</div></div>
-    <div class="tl-node" data-card="2" style="top:34%"><div class="tl-dot"></div><div class="tl-lbl">c. 49 AD · Expelled from Rome</div></div>
-    <div class="tl-node" data-card="3" style="top:40%"><div class="tl-dot"></div><div class="tl-lbl">c. 34 AD · Saul's conversion</div></div>
-    <div class="tl-node" data-card="4" style="top:44%"><div class="tl-dot"></div><div class="tl-lbl">c. 33 AD · Stephen stoned</div></div>
-    <!-- Break / zoom indicator -->
+    <!-- Roman era: 121 AD → 33 AD -->
+    <div class="tl-era" style="top:14%">Roman era</div>
+    <div class="tl-node" data-card="1" style="top:4%"><div class="tl-tick"></div><div class="tl-lbl">c. 121 AD · Suetonius</div></div>
+    <div class="tl-node" data-card="1" style="top:9%"><div class="tl-tick"></div><div class="tl-lbl">c. 116 AD · Tacitus</div></div>
+    <div class="tl-node" data-card="1" style="top:14%"><div class="tl-tick"></div><div class="tl-lbl">c. 111 AD · Pliny</div></div>
+    <div class="tl-node" data-card="1" style="top:20%"><div class="tl-tick"></div><div class="tl-lbl">c. 93 AD · Josephus</div></div>
+    <div class="tl-node" data-card="2" style="top:28%"><div class="tl-tick"></div><div class="tl-lbl">c. 60 AD · Paul's trials</div></div>
+    <div class="tl-node" data-card="2" style="top:33%"><div class="tl-tick"></div><div class="tl-lbl">c. 49 AD · Expelled from Rome</div></div>
+    <div class="tl-node" data-card="3" style="top:39%"><div class="tl-tick"></div><div class="tl-lbl">c. 34 AD · Saul's conversion</div></div>
+    <div class="tl-node" data-card="4" style="top:44%"><div class="tl-tick"></div><div class="tl-lbl">c. 33 AD · Stephen stoned</div></div>
+    <!-- Break / zoom into Passion week -->
     <div class="tl-break" style="top:49%">⋮</div>
-    <div class="tl-era-lbl" style="top:69%;left:calc(50% + 18px)">Passion&nbsp;week</div>
-    <!-- Passion period: c. 30 AD detail (bottom 45%) -->
-    <div class="tl-node" data-card="5" style="top:54%"><div class="tl-dot"></div><div class="tl-lbl">c. 31 AD · Signs in the Temple</div></div>
-    <div class="tl-node" data-card="6" style="top:60%"><div class="tl-dot"></div><div class="tl-lbl">c. 30 AD · Weeks before Passover</div></div>
-    <div class="tl-node" data-card="7" style="top:67%"><div class="tl-dot"></div><div class="tl-lbl">Days before · The Plot</div></div>
-    <div class="tl-node" data-card="8" style="top:75%"><div class="tl-dot"></div><div class="tl-lbl">Friday · The Cross</div></div>
-    <div class="tl-node" data-card="9" style="top:81%"><div class="tl-dot"></div><div class="tl-lbl">Friday morning · Before Pilate</div></div>
-    <div class="tl-node" data-card="10" style="top:88%"><div class="tl-dot"></div><div class="tl-lbl">Thursday night · Sanhedrin</div></div>
-    <div class="tl-node" data-card="11" style="top:95%"><div class="tl-dot"></div><div class="tl-lbl">Thursday evening · Last Supper</div></div>
+    <!-- c. 30 AD — Passion week, strict reverse chronological -->
+    <div class="tl-era" style="top:57%">Passion week</div>
+    <div class="tl-node" data-card="5" style="top:53%"><div class="tl-tick"></div><div class="tl-lbl">c. 31 AD · Signs in Temple</div></div>
+    <div class="tl-node" data-card="6" style="top:59%"><div class="tl-tick"></div><div class="tl-lbl">Friday · The Cross</div></div>
+    <div class="tl-node" data-card="7" style="top:65%"><div class="tl-tick"></div><div class="tl-lbl">Friday morn · Before Pilate</div></div>
+    <div class="tl-node" data-card="8" style="top:72%"><div class="tl-tick"></div><div class="tl-lbl">Thu night · Sanhedrin</div></div>
+    <div class="tl-node" data-card="9" style="top:79%"><div class="tl-tick"></div><div class="tl-lbl">Thu eve · Last Supper</div></div>
+    <div class="tl-node" data-card="10" style="top:86%"><div class="tl-tick"></div><div class="tl-lbl">Days before · The Plot</div></div>
+    <div class="tl-node" data-card="11" style="top:93%"><div class="tl-tick"></div><div class="tl-lbl">Weeks before · Coming Kingdom</div></div>
+    <div class="tl-rewind">↶ winding back the clock</div>
   </div>
 </div>
 <div class="ctr" id="ctr"></div>
