@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What is good about Good Friday?</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden}
+body{background:#1a1510;color:#d4c8b8;font-family:'Inter',sans-serif;font-weight:300;line-height:1.7}
+.deck{position:relative;width:100%;height:100%}
+.card{position:absolute;inset:0;display:flex;flex-direction:row;align-items:stretch;justify-content:flex-start;opacity:0;visibility:hidden;transition:opacity 0.6s ease;overflow-y:auto;background:#1a1510}
+.card.active{opacity:1;visibility:visible}
+.card-bg{position:fixed;inset:0;background-size:cover;background-position:center;opacity:0;transition:opacity 0.8s ease;z-index:0}
+.card-bg::after{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,rgba(26,21,16,0.78),rgba(26,21,16,0.91))}
+.card.active .card-bg{opacity:1}
+.bg-label{position:fixed;bottom:4rem;right:1.5rem;font-size:0.55rem;color:rgba(255,255,255,0.18);z-index:2;text-align:right;max-width:200px;line-height:1.4;font-style:italic;pointer-events:none}
+/* Timeline rail */
+.tl{width:48px;min-height:100vh;position:relative;z-index:1;flex-shrink:0;display:none}
+.card[data-era] .tl{display:block}
+.tl-line{position:absolute;left:50%;top:0;bottom:0;width:1px;background:linear-gradient(to bottom,transparent 0%,#3d352a 15%,#5a5248 45%,#5a5248 55%,#3d352a 85%,transparent 100%)}
+.tl-marker{position:absolute;left:50%;transform:translateX(-50%);width:8px;height:8px;border-radius:50%;background:#8a7e6e;border:1px solid #b0a090;z-index:2}
+.tl-year{position:absolute;left:50%;transform:translateX(-50%) rotate(-90deg);font-size:0.55rem;color:#6a6050;white-space:nowrap;letter-spacing:0.08em;font-family:'Cormorant Garamond',serif}
+.ci{max-width:700px;width:100%;padding:3rem 2rem 6rem;position:relative;z-index:1;margin:0 auto}
+.ct{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:clamp(1.6rem,3.5vw,2.4rem);color:#e8ddd0;text-align:center;margin-bottom:0.3rem;letter-spacing:0.02em}
+.cs{font-family:'Inter',sans-serif;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.15em;color:#6a6050;text-align:center;margin-bottom:2.2rem}
+.qb{margin-bottom:2rem}
+.q{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(0.98rem,2vw,1.15rem);color:#e0d5c5;line-height:1.8;margin-bottom:0.4rem;border-left:2px solid #3d352a;padding-left:1.1rem}
+.a{font-size:0.72rem;color:#7a7060;padding-left:1.1rem;margin-left:2px}
+.a a{color:#7a7060;text-decoration:none;border-bottom:1px dotted #4a4438;transition:color 0.3s}
+.a a:hover{color:#b0a090}
+.fn{font-size:0.68rem;color:#5a5248;padding-left:1.1rem;margin-top:0.25rem;font-style:italic}
+.fn a{color:#5a5248;text-decoration:none;border-bottom:1px dotted #3d352a}
+.fn a:hover{color:#8a7e6e}
+.tn{text-align:center;padding:1.2rem 0 1.8rem;font-family:'Cormorant Garamond',serif;font-size:0.85rem;color:#6a6050;letter-spacing:0.08em;font-style:italic}
+.nav{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:1.2rem;z-index:100;background:rgba(26,21,16,0.85);padding:0.5rem 1rem;border-radius:2rem;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.nb{background:none;border:1px solid #3d352a;color:#8a7e6e;width:38px;height:38px;border-radius:50%;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;transition:all 0.3s}
+.nb:hover{border-color:#8a7e6e;color:#d4c8b8}
+.nb:disabled{opacity:0.15;cursor:default;border-color:#2e2820}
+.dots{display:flex;gap:0.35rem;align-items:center}
+.dot{width:5px;height:5px;border-radius:50%;background:#3d352a;transition:all 0.3s;cursor:pointer}
+.dot.on{background:#8a7e6e;transform:scale(1.4)}
+.dot:hover{background:#6a6050}
+.ctr{font-size:0.65rem;color:#5a5040;letter-spacing:0.05em;position:fixed;top:1.2rem;right:1.5rem;z-index:100}
+.hero{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:80vh;text-align:center;padding:0 2rem}
+.hq{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:clamp(1.7rem,4vw,2.8rem);color:#e8ddd0;letter-spacing:0.02em;line-height:1.4;white-space:nowrap}
+.hq em{font-style:italic;color:#c8b898}
+.hsub{font-family:'Cormorant Garamond',serif;font-size:clamp(0.95rem,2vw,1.2rem);color:#7a7060;margin-top:0.8rem;font-style:italic;max-width:500px}
+.hp{font-size:0.75rem;opacity:0.35;letter-spacing:0.1em;text-transform:uppercase;margin-top:2rem;cursor:pointer;transition:opacity 0.3s}
+.hp:hover{opacity:0.7}
+.links{margin-top:2.5rem;display:flex;flex-direction:column;gap:0.5rem;align-items:center}
+.links a{font-size:0.68rem;color:#5a5248;text-decoration:none;letter-spacing:0.04em;border-bottom:1px solid #3d352a;transition:color 0.3s}
+.links a:hover{color:#8a7e6e}
+.langs{display:flex;gap:0.7rem;flex-wrap:wrap;justify-content:center;margin-top:1.5rem}
+.langs a{font-size:0.65rem;color:#6a6050;text-decoration:none;padding:0.25rem 0.5rem;border:1px solid #2e2820;border-radius:1rem;transition:all 0.3s}
+.langs a:hover{border-color:#6a6050;color:#b0a090}
+@media(max-width:600px){.tl{width:32px}.hq{white-space:normal;max-width:95vw}}
+</style>
+</head>
+<body>
+<div class="deck">
+
+<!-- CARD 0: The Question -->
+<div class="card active" data-card="0">
+  <div class="ci hero">
+    <div class="hq">What is good about Good&nbsp;Friday?</div>
+    <div class="hp" onclick="next()">Go deeper →</div>
+  </div>
+</div>
+
+<!-- CARD 1: Continued Aftershocks — Roman & Jewish historians -->
+<div class="card" data-card="1" data-era="c. 93–121 AD" data-pos="90">
+  <div class="card-bg" style="background-image:url('https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Jean-L%C3%A9on_G%C3%A9r%C3%B4me_-_The_Christian_Martyrs%27_Last_Prayer_-_Walters_37113.jpg/1280px-Jean-L%C3%A9on_G%C3%A9r%C3%B4me_-_The_Christian_Martyrs%27_Last_Prayer_-_Walters_37113.jpg')"></div>
+  <div class="bg-label">Jean-Léon Gérôme — <em>The Christian Martyrs' Last Prayer</em> (1883)</div>
+  <div class="tl"><div class="tl-line"></div><div class="tl-marker" style="top:15%"></div><div class="tl-year" style="top:15%">121 AD</div><div class="tl-marker" style="top:45%"></div><div class="tl-year" style="top:45%">111 AD</div><div class="tl-marker" style="top:65%"></div><div class="tl-year" style="top:65%">93 AD</div></div>
+  <div class="ci">
+    <div class="ct">Continued Aftershocks</div>
+    <div class="cs">Roman &amp; Jewish historians · c. 93–121 AD</div>
+    <div class="qb">
+      <div class="q">"They affirmed… that they met on a certain fixed day before it was light, sang in alternate verses a hymn to Christ as to a god, bound themselves by a solemn oath not to commit fraud, theft, or adultery… and then reassembled to partake of food of an ordinary and innocent kind."</div>
+      <div class="a">— <a href="https://faculty.georgetown.edu/jod/texts/pliny.html" target="_blank">Pliny the Younger, <em>Letters</em> X.96</a> — same letter — on what the torture actually uncovered</div>
+    </div>
+    <div class="qb">
+      <div class="q">"I interrogated them… those who persisted I ordered executed… I thought it necessary to find out what the truth was by torturing two female slaves… but I found nothing more than a depraved, excessive superstition."</div>
+      <div class="a">— <a href="https://faculty.georgetown.edu/jod/texts/pliny.html" target="_blank">Pliny the Younger, <em>Letters</em> X.96</a>, governor of Bithynia-Pontus, letter to Emperor Trajan (c. 111–113 AD)</div>
+    </div>
+    <div class="qb">
+      <div class="q">"Christus… suffered the extreme penalty during the reign of Tiberius at the hands of one of our procurators, Pontius Pilatus, and a most mischievous superstition, thus checked for the moment, again broke out not only in Judæa, the first source of the evil, but even in Rome."</div>
+      <div class="a">— <a href="https://www.perseus.tufts.edu/hopper/text?doc=Perseus%3Atext%3A1999.02.0078%3Abook%3D15%3Achapter%3D44" target="_blank">Tacitus, <em>Annals</em> XV.44</a>, Roman senator &amp; historian (c. 116 AD), on Nero's persecution c. 64 AD</div>
+    </div>
+    <div class="qb">
+      <div class="q">"Pilate condemned him to be crucified… those who had first loved him did not cease."</div>
+      <div class="a">— <a href="https://penelope.uchicago.edu/josephus/ant-18.html" target="_blank">Josephus, <em>Antiquities of the Jews</em> XVIII.3.3</a>, Jewish historian (c. 93–94 AD)</div>
+    </div>
+    <div class="qb">
+      <div class="q">"Claudius expelled the Jews from Rome, since they were constantly making disturbances at the instigation of Chrestus."</div>
+      <div class="a">— <a href="https://www.perseus.tufts.edu/hopper/text?doc=Perseus%3Atext%3A1999.02.0132%3Alife%3Dcl.%3Achapter%3D25" target="_blank">Suetonius, <em>Life of Claudius</em> 25.4</a>, Roman historian (c. 121 AD), on events c. 49 AD</div>
+    </div>
+  </div>
+</div>
+
+<!-- CARD 2: Aftershocks — Paul's trials -->
+<div class="card" data-card="2" data-era="c. 49–62 AD" data-pos="70">
+  <div class="card-bg" style="background-image:url('https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Nikolai_Bodarevsky_001.jpg/1024px-Nikolai_Bodarevsky_001.jpg')"></div>
+  <div class="bg-label">Nikolai Bodarevsky — <em>Saint Paul before King Agrippa</em> (1875)</div>
+  <div class="tl"><div class="tl-line"></div><div class="tl-marker" style="top:20%"></div><div class="tl-year" style="top:20%">62 AD</div><div class="tl-marker" style="top:45%"></div><div class="tl-year" style="top:45%">57 AD</div><div class="tl-marker" style="top:75%"></div><div class="tl-year" style="top:75%">49 AD</div></div>
+  <div class="ci">
+    <div class="ct">Aftershocks</div>
+    <div class="cs">Rome, Caesarea, Jerusalem · c. 49–62 AD</div>
+    <div class="qb">
+      <div class="q">"'King Agrippa, do you believe the prophets? I know you do.' Then Agrippa said to Paul, 'In such a short time are you persuading me to become a Christian?' Paul replied, 'I pray to God that whether in a short or a long time not only you but also all those who are listening to me today could become such as I am, except for these chains.'"</div>
+      <div class="a">— Paul before King Agrippa, Caesarea (<a href="https://netbible.org/#!l/bible%3AActs%2026%3A27-net_strongs2__notes%3AActs%2026" target="_blank">Acts 26:27–29</a>), c. 60 AD</div>
+    </div>
+    <div class="qb">
+      <div class="q">"Festus exclaimed loudly, 'You have lost your mind, Paul! Your great learning is driving you insane!' But Paul replied, 'I have not lost my mind, most excellent Festus, but am speaking true and rational words. For the king knows about these things… I am convinced that none of these things has escaped his notice, because this was not done in a corner.'"</div>
+      <div class="a">— Paul before Festus, Roman governor, Caesarea (<a href="https://netbible.org/#!l/bible%3AActs%2026%3A24-net_strongs2__notes%3AActs%2026" target="_blank">Acts 26:24–26</a>), c. 60 AD</div>
+    </div>
+    <div class="qb">
+      <div class="q">"More than forty of them formed a conspiracy and bound themselves with an oath, saying, 'We will neither eat nor drink anything until we have killed Paul.'"</div>
+      <div class="a">— <a href="https://netbible.org/#!l/bible%3AActs%2023%3A12-net_strongs2__notes%3AActs%2023" target="_blank">Acts 23:12–14</a>, Jerusalem, c. 57 AD</div>
+    </div>
+    <div class="qb">
+      <div class="q">"When they stretched him out for the lashing, Paul said to the centurion standing nearby, 'Is it legal for you to lash a man who is a Roman citizen without a proper trial?' … The commanding officer was frightened when he heard that Paul was a Roman citizen and that he had had him tied up."</div>
+      <div class="a">— Paul before the Roman tribune, Jerusalem (<a href="https://netbible.org/#!l/bible%3AActs%2022%3A24-net_strongs2__notes%3AActs%2022" target="_blank">Acts 22:24–29</a>), c. 57 AD</div>
+    </div>
+  </div>
+</div>
+
+<!-- CARD 3: Saul — reversed -->
+<div class="card" data-card="3" data-era="c. 34 AD" data-pos="60">
+  <div class="card-bg" style="background-image:url('https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Caravaggio_-_La_conversione_di_San_Paolo.jpg/800px-Caravaggio_-_La_conversione_di_San_Paolo.jpg')"></div>
+  <div class="bg-label">Caravaggio — <em>Conversion on the Way to Damascus</em> (1601)</div>
+  <div class="tl"><div class="tl-line"></div><div class="tl-marker" style="top:50%"></div><div class="tl-year" style="top:50%">c. 34 AD</div></div>
+  <div class="ci">
+    <div class="ct">Saul of Tarsus</div>
+    <div class="cs">Jerusalem &amp; Damascus · c. 34 AD</div>
+    <div class="qb">
+      <div class="q">"When he came to Jerusalem, he tried to join the disciples, but they were all afraid of him, not believing that he really was a disciple."</div>
+      <div class="a">— The disciples' reaction to Saul, Jerusalem (<a href="https://netbible.org/#!l/bible%3AActs%209%3A26-net_strongs2__notes%3AActs%209" target="_blank">Acts 9:26</a>)</div>
+    </div>
+    <div class="qb">
+      <div class="q">"'Lord,' Ananias answered, 'I have heard from many people about this man, how much harm he has done to your saints in Jerusalem. And here he has authority from the chief priests to imprison all who call on your name.' But the Lord said to him, 'Go, because this man is my chosen instrument to carry my name before Gentiles and kings and the people of Israel. For I will show him how much he must suffer for the sake of my name.'"</div>
+      <div class="a">— Ananias and the Lord, Damascus (<a href="https://netbible.org/#!l/bible%3AActs%209%3A13-net_strongs2__notes%3AActs%209" target="_blank">Acts 9:13–16</a>)</div>
+    </div>
+    <div class="qb">
+      <div class="q">"As he was going along, approaching Damascus, suddenly a light from heaven flashed around him. He fell to the ground and heard a voice saying to him, 'Saul, Saul, why are you persecuting me?' So he said, 'Who are you, Lord?' 'I am Jesus whom you are persecuting! But stand up and enter the city and you will be told what you must do.'"</div>
+      <div class="a">— <a href="https://netbible.org/#!l/bible%3AActs%209%3A3-net_strongs2__notes%3AActs%209" target="_blank">Acts 9:3–6</a>, road to Damascus</div>
+    </div>
+    <div class="qb">
+      <div class="q">"Meanwhile Saul, still breathing out threats to murder the Lord's disciples, went to the high priest and requested letters from him to the synagogues in Damascus, so that if he found any who belonged to the Way, either men or women, he could bring them as prisoners to Jerusalem."</div>
+      <div class="a">— <a href="https://netbible.org/#!l/bible%3AActs%209%3A1-net_strongs2__notes%3AActs%209" target="_blank">Acts 9:1–2</a>, Jerusalem</div>
+    </div>
+  </div>
+</div>
+
+<!-- CARD 4: Stephen — reversed -->
+<div class="card" data-card="4" data-era="c. 33 AD" data-pos="55">
+  <div class="card-bg" style="background-image:url('https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Rembrandt_-_The_Stoning_of_Saint_Stephen_-_Google_Art_Project.jpg/1024px-Rembrandt_-_The_Stoning_of_Saint_Stephen_-_Google_Art_Project.jpg')"></div>
+  <div class="bg-label">Rembrandt — <em>The Stoning of Saint Stephen</em> (1625)</div>
+  <div class="tl"><div class="tl-line"></div><div class="tl-marker" style="top:50%"></div><div class="tl-year" style="top:50%">c. 33 AD</div></div>
+  <div class="ci">
+    <div class="ct">Stephen</div>
+    <div class="cs">Before the Sanhedrin · Jerusalem · c. 33 AD</div>
+    <div class="qb">
+      <div class="q">"Then he fell to his knees and cried out with a loud voice, 'Lord, do not hold this sin against them.' When he had said this, he died."</div>
+      <div class="a">— Stephen's final prayer (<a href="https://netbible.org/#!l/bible%3AActs%207%3A60-net_strongs2__notes%3AActs%207" target="_blank">Acts 7:60</a>)</div>
+    </div>
+    <div class="qb">
+      <div class="q">"When they heard these things, they became furious and gnashed their teeth at him… they covered their ears, shouting with a loud voice, and rushed at him with one intent. They threw him out of the city and began to stone him, and the witnesses laid their cloaks at the feet of a young man named Saul."</div>
+      <div class="a">— <a href="https://netbible.org/#!l/bible%3AActs%207%3A54-net_strongs2__notes%3AActs%207" target="_blank">Acts 7:54–58</a></div>
+    </div>
+    <div class="qb">
+      <div class="q">"But Stephen, full of the Holy Spirit, looked intently toward heaven and saw the glory of God, and Jesus standing at the right hand of God. 'Look!' he said. 'I see the heavens opened, and the Son of Man standing at the right hand of God!'"</div>
+      <div class="a">— <a href="https://netbible.org/#!l/bible%3AActs%207%3A55-net_strongs2__notes%3AActs%207" target="_blank">Acts 7:55–56</a></div>
+    </div>
+    <div class="qb">
+      <div class="q">"You stubborn people, with uncircumcised hearts and ears! You are always resisting the Holy Spirit, like your ancestors did! Which of the prophets did your ancestors not persecute? They killed those who foretold the coming of the Righteous One, whose betrayers and murderers you have now become!"</div>
+      <div class="a">— Stephen, speech to the Sanhedrin (<a href="https://netbible.org/#!l/bible%3AActs%207%3A51-net_strongs2__notes%3AActs%207" target="_blank">Acts 7:51–52</a>)</div>
+    </div>
+  </div>
+</div>
+
+<!-- CARD 5: Signs, Jealousy, Defiance — reversed -->
+<div class="card" data-card="5" data-era="c. 31 AD" data-pos="50">
+  <div class="card-bg" style="background-image:url('https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Solomon%27s_Temple_-_Exterior.jpg/1024px-Solomon%27s_Temple_-_Exterior.jpg')"></div>
+  <div class="bg-label">Illustration — <em>Herod's Temple, Jerusalem</em></div>
+  <div class="tl"><div class="tl-line"></div><div class="tl-marker" style="top:50%"></div><div class="tl-year" style="top:50%">c. 31 AD</div></div>
+  <div class="ci">
+    <div class="ct">Signs, Jealousy, and Defiance</div>
+    <div class="cs">Temple Courts, Jerusalem · c. 31 AD</div>
+    <div class="qb">
+      <div class="q">"Peter and the apostles replied, 'We must obey God rather than people. The God of our forefathers raised up Jesus, whom you seized and killed by hanging him on a tree… We are witnesses of these things.'"</div>
+      <div class="a">— Peter and the apostles (<a href="https://netbible.org/#!l/bible%3AActs%205%3A29-net_strongs2__notes%3AActs%205" target="_blank">Acts 5:29–32</a>)</div>
+    </div>
+    <div class="qb">
+      <div class="q">"'We gave you strict orders not to teach in this name. Look, you have filled Jerusalem with your teaching, and you intend to bring this man's blood on us!'"</div>
+      <div class="a">— The high priest, to the apostles (<a href="https://netbible.org/#!l/bible%3AActs%205%3A28-net_strongs2__notes%3AActs%205" target="_blank">Acts 5:28</a>)</div>
+    </div>
+    <div class="qb">
+      <div class="q">"But during the night an angel of the Lord opened the doors of the prison, led them out, and said, 'Go and stand in the temple courts and tell the people all the words of this life.'"</div>
+      <div class="a">— <a href="https://netbible.org/#!l/bible%3AActs%205%3A19-net_strongs2__notes%3AActs%205" target="_blank">Acts 5:19–20</a></div>
+    </div>
+    <div class="qb">
+      <div class="q">"Now the high priest rose up, and all those with him (that is, the religious party of the Sadducees), and they were filled with jealousy. They laid hands on the apostles and put them in a public jail."</div>
+      <div class="a">— <a href="https://netbible.org/#!l/bible%3AActs%205%3A17-net_strongs2__notes%3AActs%205" target="_blank">Acts 5:17–18</a></div>
+    </div>
+    <div class="qb">
+      <div class="q">"Many signs and wonders were done among the people through the hands of the apostles… More and more believers in the Lord were added to their number… people even carried the sick out into the streets… and they were all healed."</div>
+      <div class="a">— <a href="https://netbible.org/#!l/bible%3AActs%205%3A12-net_strongs2__notes%3AActs%205" target="_blank">Acts 5:12–16</a>, Jerusalem</div>
+    </div>
+  </div>
+</div>
+
+<!-- CARD 6: The Coming Kingdom — reversed, with time transition -->
+<div class="card" data-card="6" data-era="c. 30 AD" data-pos="45">
+  <div class="card-bg" style="background-image:url('https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Brooklyn_Museum_-_The_Procession_in_the_Streets_of_Jerusalem_%28Le_cort%C3%A8ge_dans_les_rues_de_J%C3%A9rusalem%29_-_James_Tissot.jpg/1024px-Brooklyn_Museum_-_The_Procession_in_the_Streets_of_Jerusalem_%28Le_cort%C3%A8ge_dans_les_rues_de_J%C3%A9rusalem%29_-_James_Tissot.jpg')"></div>
+  <div class="bg-label">James Tissot — <em>The Procession in the Streets of Jerusalem</em> (c. 1890)</div>
+  <div class="tl"><div class="tl-line"></div><div class="tl-marker" style="top:50%"></div><div class="tl-year" style="top:50%">c. 30 AD</div></div>
+  <div class="ci">
+    <div class="ct">The Coming Kingdom</div>
+    <div class="cs">Galilee to Jerusalem · weeks before Passover · c. 30 AD</div>
+    <div class="tn">— winding back before the event —</div>
+    <div class="qb">
+      <div class="q">"Some of the Pharisees in the crowd said to him, 'Teacher, rebuke your disciples.' He answered, 'I tell you, if they keep silent, the very stones will cry out!'"</div>
+      <div class="a">— Pharisees and Jesus (<a href="https://netbible.org/#!l/bible%3ALuke%2019%3A39-net_strongs2__notes%3ALuke%2019" target="_blank">Luke 19:39–40</a>)</div>
+    </div>
+    <div class="qb">
+      <div class="q">"As he approached, the whole crowd of his disciples began to rejoice and praise God with a loud voice for all the mighty works they had seen: 'Blessed is the king who comes in the name of the Lord! Peace in heaven and glory in the highest!'"</div>
+      <div class="a">— The crowds, entering Jerusalem (<a href="https://netbible.org/#!l/bible%3ALuke%2019%3A37-net_strongs2__notes%3ALuke%2019" target="_blank">Luke 19:37–38</a>)</div>
+    </div>
+    <div class="qb">
+      <div class="q">"They sent their disciples to him, along with the Herodians, saying, 'Teacher, we know that you are truthful… Is it right to pay taxes to Caesar or not?' … He said to them, 'Then give to Caesar the things that are Caesar's, and to God the things that are God's.' When they heard this they were stunned, and they left him and went away."</div>
+      <div class="a">— Pharisees, Herodians, and Jesus (<a href="https://netbible.org/#!l/bible%3AMatthew%2022%3A15-net_strongs2__notes%3AMatthew%2022" target="_blank">Matt 22:15–22</a>)</div>
+    </div>
+    <div class="qb">
+      <div class="q">"The Son of Man did not come to be served but to serve, and to give his life as a ransom for many."</div>
+      <div class="a">— Jesus, on the road to Jerusalem (<a href="https://netbible.org/#!l/bible%3AMark%2010%3A45-net_strongs2__notes%3AMark%2010" target="_blank">Mark 10:45</a>)</div>
+    </div>
+    <div class="qb">
+      <div class="q">"At that time some Pharisees came to him and said, 'Get away from here because Herod wants to kill you.' But he said to them, 'Go and tell that fox, "Look, I am casting out demons and performing healings today and tomorrow, and on the third day I will complete my work." Nevertheless I must go on my way today and tomorrow and the next day, because it is impossible that a prophet should be killed outside Jerusalem.'"</div>
+      <div class="a">— Jesus, responding to Herod's threats (<a href="https://netbible.org/#!l/bible%3ALuke%2013%3A31-net_strongs2__notes%3ALuke%2013" target="_blank">Luke 13:31–33</a>)</div>
+    </div>
+  </div>
+</div>
+
+<!-- CARD 7: The Plot — reversed -->
+<div class="card" data-card="7" data-era="c. 30 AD" data-pos="43">
+  <div class="card-bg" style="background-image:url('https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/Giotto_-_Scrovegni_-_-31-_-_Kiss_of_Judas.jpg/1024px-Giotto_-_Scrovegni_-_-31-_-_Kiss_of_Judas.jpg')"></div>
+  <div class="bg-label">Giotto — <em>Kiss of Judas</em> (c. 1305), Scrovegni Chapel</div>
+  <div class="tl"><div class="tl-line"></div><div class="tl-marker" style="top:50%"></div><div class="tl-year" style="top:50%">c. 30 AD</div></div>
+  <div class="ci">
+    <div class="ct">The Plot</div>
+    <div class="cs">Jerusalem · days before Passover</div>
+    <div class="qb">
+      <div class="q">"'Not during the feast,' they said, 'so there won't be a riot among the people.'"</div>
+      <div class="a">— The chief priests and experts in the law (<a href="https://netbible.org/#!l/bible%3AMark%2014%3A2-net_strongs2__notes%3AMark%2014" target="_blank">Mark 14:2</a>)</div>
+    </div>
+    <div class="qb">
+      <div class="q">"Then one of the twelve, the one named Judas Iscariot, went to the chief priests and said, 'What will you give me to betray him into your hands?' So they set out thirty silver coins for him. From that time on, Judas began looking for an opportunity to betray him."</div>
+      <div class="a">— Judas Iscariot (<a href="https://netbible.org/#!l/bible%3AMatthew%2026%3A14-net_strongs2__notes%3AMatthew%2026" target="_blank">Matt 26:14–16</a>)</div>
+    </div>
+    <div class="qb">
+      <div class="q">"So from that day they planned together to kill him."</div>
+      <div class="a">— <a href="https://netbible.org/#!l/bible%3AJohn%2011%3A53-net_strongs2__notes%3AJohn%2011" target="_blank">John 11:53</a></div>
+    </div>
+    <div class="qb">
+      <div class="q">"Then one of them, Caiaphas, who was high priest that year, said, 'You know nothing at all! You do not realise that it is better for you to have one man die for the people than for the whole nation to perish.'"</div>
+      <div class="a">— Caiaphas, high priest (<a href="https://netbible.org/#!l/bible%3AJohn%2011%3A49-net_strongs2__notes%3AJohn%2011" target="_blank">John 11:49–50</a>)</div>
+    </div>
+    <div class="qb">
+      <div class="q">"Then the chief priests and the Pharisees called the council together and said, 'What are we doing? For this man is performing many miraculous signs. If we let him go on in this way, everyone will believe in him, and the Romans will come and take away our sanctuary and our nation.'"</div>
+      <div class="a">— The Sanhedrin (<a href="https://netbible.org/#!l/bible%3AJohn%2011%3A47-net_strongs2__notes%3AJohn%2011" target="_blank">John 11:47–48</a>)</div>
+    </div>
+    <div class="qb">
+      <div class="q">"So the Pharisees went out and planned with the Herodians how they could trap him and kill him."</div>
+      <div class="a">— <a href="https://netbible.org/#!l/bible%3AMark%203%3A6-net_strongs2__notes%3AMark%203" target="_blank">Mark 3:6</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- CARD 8: The Cross -->
+<div class="card" data-card="8" data-era="c. 30 AD" data-pos="40">
+  <div class="card-bg" style="background-image:url('https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Albrecht_Altdorfer_-_Christ_on_the_Cross_-_WGA00214.jpg/800px-Albrecht_Altdorfer_-_Christ_on_the_Cross_-_WGA00214.jpg')"></div>
+  <div class="bg-label">Albrecht Altdorfer — <em>Christ on the Cross</em> (c. 1526)</div>
+  <div class="tl"><div class="tl-line"></div><div class="tl-marker" style="top:50%"></div><div class="tl-year" style="top:50%">Friday</div></div>
+  <div class="ci">
+    <div class="ct">The Cross</div>
+    <div class="cs">Golgotha · Friday</div>
+    <div class="qb">
+      <div class="q">"The centurion, seeing what had happened, praised God and said, 'Certainly this man was innocent!'"</div>
+      <div class="a">— A Roman centurion (<a href="https://netbible.org/#!l/bible%3ALuke%2023%3A47-net_strongs2__notes%3ALuke%2023" target="_blank">Luke 23:47</a>)</div>
+    </div>
+    <div class="qb">
+      <div class="q">"It is finished."</div>
+      <div class="a">— Jesus, final words (<a href="https://netbible.org/#!l/bible%3AJohn%2019%3A30-net_strongs2__notes%3AJohn%2019" target="_blank">John 19:30</a>)</div>
+    </div>
+    <div class="qb">
+      <div class="q">"One of the criminals who was hanging there railed at him, saying, 'Aren't you the Christ? Save yourself and us!' But the other rebuked him, saying, '… We are getting our just desserts, for what we did. But this man has done nothing wrong.' Then he said, 'Jesus, remember me when you come into your kingdom.' And Jesus said to him, 'I tell you the truth, today you will be with me in paradise.'"</div>
+      <div class="a">— The two criminals and Jesus (<a href="https://netbible.org/#!l/bible%3ALuke%2023%3A39-net_strongs2__notes%3ALuke%2023" target="_blank">Luke 23:39–43</a>)</div>
+    </div>
+    <div class="qb">
+      <div class="q">"The soldiers also mocked him, coming up and offering him sour wine, and saying, 'If you are the king of the Jews, save yourself!'"</div>
+      <div class="a">— Roman soldiers (<a href="https://netbible.org/#!l/bible%3ALuke%2023%3A36-net_strongs2__notes%3ALuke%2023" target="_blank">Luke 23:36–37</a>)</div>
+    </div>
+    <div class="qb">
+      <div class="q">"The people also stood there watching, but the rulers ridiculed him, saying, 'He saved others. Let him save himself if he is the Christ of God, his chosen one!'"</div>
+      <div class="a">— The rulers (<a href="https://netbible.org/#!l/bible%3ALuke%2023%3A35-net_strongs2__notes%3ALuke%2023" target="_blank">Luke 23:35</a>)</div>
+    </div>
+    <div class="qb">
+      <div class="q">"Father, forgive them, for they don't know what they are doing."</div>
+      <div class="a">— Jesus, as they crucified him (<a href="https://netbible.org/#!l/bible%3ALuke%2023%3A34-net_strongs2__notes%3ALuke%2023" target="_blank">Luke 23:34</a>)</div>
+    </div>
+  </div>
+</div>
+
+<!-- CARD 9: Before Pilate — reversed -->
+<div class="card" data-card="9" data-era="c. 30 AD" data-pos="38">
+  <div class="card-bg" style="background-image:url('https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/Ecce_homo_by_Antonio_Ciseri_%281%29.jpg/1024px-Ecce_homo_by_Antonio_Ciseri_%281%29.jpg')"></div>
+  <div class="bg-label">Antonio Ciseri — <em>Ecce Homo</em> (1871)</div>
+  <div class="tl"><div class="tl-line"></div><div class="tl-marker" style="top:50%"></div><div class="tl-year" style="top:50%">Friday AM</div></div>
+  <div class="ci">
+    <div class="ct">Before Pilate</div>
+    <div class="cs">The Praetorium · Friday morning</div>
+    <div class="tn">— winding back: what led to the cross —</div>
+    <div class="qb">
+      <div class="q">"When Pilate saw that he could do nothing, but that instead a riot was starting, he took some water, washed his hands before the crowd and said, 'I am innocent of this man's blood. You take care of it yourselves!'"</div>
+      <div class="a">— Pilate (<a href="https://netbible.org/#!l/bible%3AMatthew%2027%3A24-net_strongs2__notes%3AMatthew%2027" target="_blank">Matt 27:24</a>)</div>
+    </div>
+    <div class="qb">
+      <div class="q">"Pilate said, 'Shall I crucify your king?' The high priests replied, 'We have no king except Caesar!'"</div>
+      <div class="a">— Pilate and the chief priests (<a href="https://netbible.org/#!l/bible%3AJohn%2019%3A15-net_strongs2__notes%3AJohn%2019" target="_blank">John 19:15</a>)</div>
+    </div>
+    <div class="qb">
+      <div class="q">"From this point on, Pilate tried to release him. But the Jewish leaders shouted out, 'If you release this man, you are no friend of Caesar! Everyone who claims to be a king opposes Caesar!'"</div>
+      <div class="a">— The crowd to Pilate (<a href="https://netbible.org/#!l/bible%3AJohn%2019%3A12-net_strongs2__notes%3AJohn%2019" target="_blank">John 19:12</a>)</div>
+    </div>
+    <div class="qb">
+      <div class="q">"But they kept on shouting insistently, 'Crucify, crucify him!' … Their shouts prevailed."</div>
+      <div class="a">— The crowd (<a href="https://netbible.org/#!l/bible%3ALuke%2023%3A21-net_strongs2__notes%3ALuke%2023" target="_blank">Luke 23:21–23</a>)</div>
+    </div>
+    <div class="qb">
+      <div class="q">"'I have not found this man guilty of any of your charges against him. Neither has Herod, for he sent him back to us. Look, he has done nothing deserving death. I will therefore have him flogged and then release him.'"</div>
+      <div class="a">— Pilate to the chief priests and the crowd (<a href="https://netbible.org/#!l/bible%3ALuke%2023%3A14-net_strongs2__notes%3ALuke%2023" target="_blank">Luke 23:14–16</a>)</div>
+    </div>
+    <div class="qb">
+      <div class="q">"Pilate said to the chief priests and the crowds, 'I find no basis for an accusation against this man.'… He sent him to Herod… Herod and his soldiers ridiculed and mocked him, and after dressing him in elegant clothes, sent him back to Pilate."</div>
+      <div class="a">— Pontius Pilate, Roman governor; Herod Antipas (<a href="https://netbible.org/#!l/bible%3ALuke%2023%3A4-net_strongs2__notes%3ALuke%2023" target="_blank">Luke 23:4, 11</a>)</div>
+    </div>
+  </div>
+</div>
+
+<!-- CARD 10: Before the Sanhedrin — reversed -->
+<div class="card" data-card="10" data-era="c. 30 AD" data-pos="36">
+  <div class="card-bg" style="background-image:url('https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/Gerard_van_Honthorst_-_Christ_before_the_High_Priest_-_WGA11650.jpg/1024px-Gerard_van_Honthorst_-_Christ_before_the_High_Priest_-_WGA11650.jpg')"></div>
+  <div class="bg-label">Gerard van Honthorst — <em>Christ before the High Priest</em> (c. 1617)</div>
+  <div class="tl"><div class="tl-line"></div><div class="tl-marker" style="top:50%"></div><div class="tl-year" style="top:50%">Thu night</div></div>
+  <div class="ci">
+    <div class="ct">Before the Sanhedrin</div>
+    <div class="cs">House of the High Priest · Thursday night</div>
+    <div class="qb">
+      <div class="q">"Then they spat in his face and struck him with their fists. And some slapped him, saying, 'Prophesy for us, you Christ! Who hit you?'"</div>
+      <div class="a">— <a href="https://netbible.org/#!l/bible%3AMatthew%2026%3A67-net_strongs2__notes%3AMatthew%2026" target="_blank">Matt 26:67–68</a></div>
+    </div>
+    <div class="qb">
+      <div class="q">"Then the high priest tore his robes and declared, 'He has blasphemed! Why do we still need witnesses? Now you have heard the blasphemy! What is your verdict?' They answered, 'He is guilty and deserves death.'"</div>
+      <div class="a">— Caiaphas and the Sanhedrin (<a href="https://netbible.org/#!l/bible%3AMatthew%2026%3A65-net_strongs2__notes%3AMatthew%2026" target="_blank">Matt 26:65–66</a>)</div>
+    </div>
+    <div class="qb">
+      <div class="q">"The high priest said to him, 'I charge you under oath by the living God, tell us if you are the Christ, the Son of God.' Jesus said to him, 'You have said it yourself. But I tell you, from now on you will see the Son of Man sitting at the right hand of the Power and coming on the clouds of heaven.'"</div>
+      <div class="a">— Caiaphas and Jesus (<a href="https://netbible.org/#!l/bible%3AMatthew%2026%3A63-net_strongs2__notes%3AMatthew%2026" target="_blank">Matt 26:63–64</a>)</div>
+    </div>
+    <div class="qb">
+      <div class="q">"The chief priests and the whole Sanhedrin were trying to find false testimony against Jesus so that they could put him to death. But they did not find anything, though many false witnesses came forward."</div>
+      <div class="a">— <a href="https://netbible.org/#!l/bible%3AMatthew%2026%3A59-net_strongs2__notes%3AMatthew%2026" target="_blank">Matt 26:59–60</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- CARD 11: The Last Supper — innermost layer, reversed -->
+<div class="card" data-card="11" data-era="c. 30 AD" data-pos="34">
+  <div class="card-bg" style="background-image:url('https://upload.wikimedia.org/wikipedia/commons/thumb/4/48/The_Last_Supper_-_Leonardo_Da_Vinci_-_High_Resolution_32x16.jpg/1280px-The_Last_Supper_-_Leonardo_Da_Vinci_-_High_Resolution_32x16.jpg')"></div>
+  <div class="bg-label">Leonardo da Vinci — <em>The Last Supper</em> (c. 1495–1498)</div>
+  <div class="tl"><div class="tl-line"></div><div class="tl-marker" style="top:50%"></div><div class="tl-year" style="top:50%">Thu eve</div></div>
+  <div class="ci">
+    <div class="ct">The Last Supper</div>
+    <div class="cs">Upper Room, Jerusalem · Thursday evening</div>
+    <div class="tn">— the innermost layer —</div>
+    <div class="qb">
+      <div class="q">"'You will all fall away,' Jesus told them… Peter said to him, 'Even if they all fall away, I will not!' Jesus said, 'I tell you the truth, today — this very night — before a rooster crows twice, you will deny me three times.' But Peter insisted emphatically, 'Even if I must die with you, I will never deny you.' And all of them said the same thing."</div>
+      <div class="a">— Jesus and Peter (<a href="https://netbible.org/#!l/bible%3AMark%2014%3A27-net_strongs2__notes%3AMark%2014" target="_blank">Mark 14:27–31</a>)</div>
+    </div>
+    <div class="qb">
+      <div class="q">"'I tell you the truth, one of you eating with me will betray me.' They were distressed, and one by one said to him, 'Surely not I?'"</div>
+      <div class="a">— Jesus and the disciples (<a href="https://netbible.org/#!l/bible%3AMark%2014%3A18-net_strongs2__notes%3AMark%2014" target="_blank">Mark 14:18–19</a>)</div>
+    </div>
+    <div class="qb">
+      <div class="q">"While they were eating, he took bread, and after giving thanks he broke it, gave it to them, and said, 'Take it. This is my body.' And after taking the cup and giving thanks, he gave it to them, and they all drank from it. He said to them, 'This is my blood, the blood of the covenant, that is poured out for many.'"</div>
+      <div class="a">— Jesus (<a href="https://netbible.org/#!l/bible%3AMark%2014%3A22-net_strongs2__notes%3AMark%2014" target="_blank">Mark 14:22–24</a>)</div>
+    </div>
+    <div class="qb">
+      <div class="q">"I have earnestly desired to eat this Passover with you before I suffer. For I tell you, I will not eat it again until it is fulfilled in the kingdom of God."</div>
+      <div class="a">— Jesus (<a href="https://netbible.org/#!l/bible%3ALuke%2022%3A15-net_strongs2__notes%3ALuke%2022" target="_blank">Luke 22:15–16</a>)</div>
+    </div>
+  </div>
+</div>
+
+<!-- CARD 12: The Question Returns -->
+<div class="card" data-card="12">
+  <div class="ci hero">
+    <div class="hq">What is <em>so</em> good about Good Friday?</div>
+    <div class="hsub">What good was — and is — at stake?</div>
+    <div class="links">
+      <a href="https://netbible.org/#!l/bible%3ALuke%2022%3A1-net_strongs2__notes%3ALuke%2022" target="_blank" rel="noopener">Read the full account — Luke 22–24 (NET Bible) ↗</a>
+      <a href="https://www.understandchristianity.com/timelines/events-holy-week/" target="_blank" rel="noopener">Holy Week timeline &amp; map ↗</a>
+    </div>
+    <div class="langs">
+      <a href="https://netbible.org/#!l/bible%3ALuke%2022%3A1-net_strongs2__notes%3ALuke%2022" target="_blank">English</a>
+      <a href="https://www.bible.com/bible/46/LUK.22.CUVS" target="_blank">中文</a>
+      <a href="https://www.bible.com/bible/90/LUK.22.HHBD" target="_blank">हिन्दी</a>
+      <a href="https://www.bible.com/bible/128/LUK.22.NVI" target="_blank">Español</a>
+      <a href="https://www.bible.com/bible/93/LUK.22.LSG" target="_blank">Français</a>
+      <a href="https://www.bible.com/bible/37/LUK.22.NAA" target="_blank">العربية</a>
+      <a href="https://www.bible.com/bible/161/LUK.22.BNIRV" target="_blank">বাংলা</a>
+      <a href="https://www.bible.com/bible/211/LUK.22.NVI-PT" target="_blank">Português</a>
+      <a href="https://www.bible.com/bible/313/LUK.22.SZ" target="_blank">Русский</a>
+      <a href="https://www.bible.com/bible/83/LUK.22.JLB" target="_blank">日本語</a>
+    </div>
+  </div>
+</div>
+
+</div><!-- end .deck -->
+
+<div class="nav">
+  <button class="nb" id="pb" onclick="prev()" disabled>←</button>
+  <div class="dots" id="dots"></div>
+  <button class="nb" id="nb" onclick="next()">→</button>
+</div>
+<div class="ctr" id="ctr"></div>
+
+<script>
+const C=document.querySelectorAll('.card'),T=C.length;let cur=0;
+const D=document.getElementById('dots');
+for(let i=0;i<T;i++){const d=document.createElement('div');d.className='dot'+(i===0?' on':'');d.onclick=()=>go(i);D.appendChild(d)}
+function go(n){if(n<0||n>=T)return;C[cur].classList.remove('active');cur=n;C[cur].classList.add('active');C[cur].scrollTop=0;upd()}
+function next(){go(cur+1)}function prev(){go(cur-1)}
+function upd(){
+  document.getElementById('pb').disabled=cur===0;
+  document.getElementById('nb').disabled=cur===T-1;
+  document.getElementById('ctr').textContent=(cur+1)+' / '+T;
+  document.querySelectorAll('.dot').forEach((d,i)=>d.classList.toggle('on',i===cur));
+}
+document.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();next()}if(e.key==='ArrowLeft'){e.preventDefault();prev()}});
+let tx=0;
+document.addEventListener('touchstart',e=>{tx=e.changedTouches[0].screenX});
+document.addEventListener('touchend',e=>{const d=tx-e.changedTouches[0].screenX;if(Math.abs(d)>50){d>0?next():prev()}});
+upd();
+</script>
