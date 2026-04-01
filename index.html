@@ -59,6 +59,9 @@ body{background:#1a1510;color:#d4c8b8;font-family:'Inter',sans-serif;font-weight
 .fn a:hover{color:#8a7e6e}
 .tn{text-align:center;padding:1.2rem 0 1.8rem;font-family:'Cormorant Garamond',serif;font-size:0.85rem;color:#6a6050;letter-spacing:0.08em;font-style:italic;overflow-wrap:break-word;word-wrap:break-word}
 .ctr{font-size:0.65rem;color:#5a5040;letter-spacing:0.05em;position:fixed;top:1.2rem;right:1.5rem;z-index:100}
+.home-btn{position:fixed;top:1rem;left:1rem;z-index:300;font-family:'Cormorant Garamond',serif;font-size:0.78rem;color:#5a5040;cursor:pointer;transition:color 0.3s,opacity 0.3s;opacity:0;pointer-events:none;text-decoration:none;letter-spacing:0.04em}
+.home-btn.visible{opacity:1;pointer-events:auto}
+.home-btn:hover{color:#c8b898}
 .hero{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:80vh;text-align:center;padding:0 2rem}
 .hq{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:clamp(1.7rem,4vw,2.8rem);color:#e8ddd0;letter-spacing:0.02em;line-height:1.4;white-space:nowrap}
 .hq em{font-style:italic;color:#c8b898}
@@ -92,6 +95,7 @@ body{background:#1a1510;color:#d4c8b8;font-family:'Inter',sans-serif;font-weight
   .cs{font-size:0.65rem;margin-bottom:1.6rem}
   .tn{font-size:0.78rem;padding:0.8rem 0 1.2rem}
   .qb{margin-bottom:1.5rem}
+  .home-btn{top:0.5rem;left:0.6rem;font-size:0.68rem}
   .ctr{top:0.6rem;right:0.8rem;font-size:0.58rem}
   .bg-label{bottom:0.8rem;right:0.8rem;font-size:0.48rem;max-width:140px}
   .hero{min-height:70vh;padding:0 1rem}
@@ -469,15 +473,15 @@ body{background:#1a1510;color:#d4c8b8;font-family:'Inter',sans-serif;font-weight
   </div>
 </div>
 
-<!-- CARD 12: A Good Kingdom Comes or Is Overcome? — reversed, with time transition -->
+<!-- CARD 12: A Good Kingdom or Overthrown? — reversed, with time transition -->
 <div class="card" data-card="12" data-era="c. 30 AD" data-pos="45">
   <div class="card-bg" style="background-image:url('https://upload.wikimedia.org/wikipedia/commons/7/71/Brooklyn_Museum_-_The_Procession_in_the_Streets_of_Jerusalem_%28Le_cort%C3%A8ge_dans_les_rues_de_J%C3%A9rusalem%29_-_James_Tissot.jpg')"></div>
   <div class="bg-label">James Tissot — <em>The Procession in the Streets of Jerusalem</em> (c. 1890)</div>
   <div class="tl"><div class="tl-line"></div><div class="tl-marker" style="top:50%"></div><div class="tl-year" style="top:50%">c. 30 AD</div></div>
   <div class="ci">
-    <div class="ct">A Good Kingdom Comes or Is Overcome?</div>
+    <div class="ct">A Good Kingdom or Overthrown?</div>
     <div class="cs">Galilee to Jerusalem · weeks before Passover · c. 30 AD</div>
-    <div class="tn">— a good kingdom comes or is overcome? —</div>
+    <div class="tn">— a good kingdom or overthrown? —</div>
     <div class="qb">
       <div class="q">"Some of the Pharisees in the crowd said to him, 'Teacher, rebuke your disciples.' He answered, 'I tell you, if they keep silent, the very stones will cry out!'"</div>
       <div class="a">— Pharisees and Jesus (<a href="https://netbible.org/#!l/bible%3ALuke%2019%3A39-net_strongs2__notes%3ALuke%2019" target="_blank">Luke 19:39–40</a>)</div>
@@ -595,12 +599,13 @@ body{background:#1a1510;color:#d4c8b8;font-family:'Inter',sans-serif;font-weight
     <div class="tl-node" data-card="9" style="top:64%"><div class="tl-nail"></div><div class="tl-lbl">Thu night · Courts at Night?</div></div>
     <div class="tl-node" data-card="10" style="top:68%"><div class="tl-nail"></div><div class="tl-lbl">Thu eve · A Good Last Supper?</div></div>
     <div class="tl-node" data-card="11" style="top:72%"><div class="tl-nail"></div><div class="tl-lbl">Days before · A Good Plot?</div></div>
-    <div class="tl-node" data-card="12" style="top:78%"><div class="tl-nail"></div><div class="tl-lbl">Weeks before · Kingdom Comes?</div></div>
+    <div class="tl-node" data-card="12" style="top:78%"><div class="tl-nail"></div><div class="tl-lbl">Weeks before · Kingdom?</div></div>
     <div class="tl-era" style="top:87%">Was it good?</div>
     <div class="tl-node" data-card="13" style="top:90%"><div class="tl-nail"></div><div class="tl-lbl">Could good come?</div></div>
     <div class="tl-rewind">↶ winding back the clock</div>
   </div>
 </div>
+<a class="home-btn" id="homeBtn" onclick="go(0)">✝ Start</a>
 <div class="ctr" id="ctr"></div>
 
 <script>
@@ -657,6 +662,8 @@ function upd(){
   document.getElementById('ctr').textContent=(cur+1)+' / '+T;
   // Show timeline only on content cards (1–13)
   TL.classList.toggle('visible',cur>=1&&cur<=13);
+  // Show home button except on intro card
+  document.getElementById('homeBtn').classList.toggle('visible',cur>0);
   // Highlight active nodes
   nodes.forEach(n=>{
     const card=parseInt(n.dataset.card);
